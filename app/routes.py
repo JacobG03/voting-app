@@ -1,13 +1,14 @@
 from app import app, db
-from app.models import User, Poll
-from flask import json, jsonify, request
-from app.schemas import CreateRegisterSchema, CreateLoginSchema
+from app.models import User, Poll, Option
+from flask import jsonify, request
+from app.schemas import CreateRegisterSchema, CreateLoginSchema, CreatePollSchema
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies, current_user
 
 
 registerSchema = CreateRegisterSchema()
 loginSchema = CreateLoginSchema()
+pollSchema = CreatePollSchema()
 
 
 @app.get('/api')
@@ -114,6 +115,7 @@ def get_polls():
   for poll in Poll.query.all():
     polls.append({
       'id': poll.id,
+      'user': f'/users/{User.query.get(poll.user_id).username}',
       'topic': poll.topic,
       'options': f'/polls/{poll.id}/options',
       'votes': f'/polls/{poll.id}/votes'
@@ -127,7 +129,26 @@ def get_polls():
 @app.post('/api/polls')
 @jwt_required()
 def create_poll():
-  #! Code
+  # receive data
+  data = request.get_json(silent=True)
+  # validate data
+  errors =  pollSchema.validate(data)
+  if errors:
+    return jsonify({
+      'errors': errors
+    }), 422
+  
+  # create poll
+  poll = Poll(user_id=current_user.id, topic=data['topic'])
+  db.session.add(poll)
+  db.session.commit()
+
+  # create given options
+  for body in data['options']:
+    option = Option(poll_id=poll.id, body=body)
+    db.session.add(option)
+  db.session.commit()
+  
   return jsonify({
     'message': 'Poll created.'
   }), 200

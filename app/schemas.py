@@ -33,3 +33,7 @@ class CreateLoginSchema(Schema):
   email = fields.Str(required=True)
   password = fields.Str(required=True)
 
+
+class CreatePollSchema(Schema):
+  topic = fields.Str(required=True, validate=Length(1, 256))
+  options = fields.List(fields.Str(required=True, validate=Length(1, 128)))
