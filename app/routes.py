@@ -1,16 +1,17 @@
-from flask_jwt_extended.view_decorators import jwt_required
 from app import app, db
 from app.models import User
 from flask import jsonify, request
 from app.schemas import CreateRegisterSchema, CreateLoginSchema
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token, set_access_cookies
+from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies
 
 
 registerSchema = CreateRegisterSchema()
 loginSchema = CreateLoginSchema()
 
+
 @app.get('/api')
+@jwt_required()
 def api():
   return jsonify({
     'message': 'It appears that the API should technically maybe work. :)'
@@ -85,3 +86,12 @@ def login():
         'password': ['Invalid fields']
       }
     }), 422
+
+
+@app.get('/api/logout')
+def logout():
+  response = jsonify({
+    'message': 'Logged out successfully.'
+  })
+  unset_jwt_cookies(response)
+  return response, 200
