@@ -25,6 +25,7 @@ class CreateRegisterSchema(Schema):
 
   @validates('email')
   def validateEmail(self, email):
+    # checks if email is used by another user
     if User.query.filter(func.lower(User.email) == func.lower(email)).first():
       raise ValidationError('Email is taken. Try a different one')
 
@@ -37,3 +38,7 @@ class CreateLoginSchema(Schema):
 class CreatePollSchema(Schema):
   topic = fields.Str(required=True, validate=Length(1, 256))
   options = fields.List(fields.Str(required=True, validate=Length(1, 128)))
+
+
+class CreateOptionSchema(Schema):
+  body = fields.Str(required=True, validate=Length(1, 128))
