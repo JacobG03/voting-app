@@ -1,4 +1,5 @@
 from app import db
+from datetime import datetime
 
 
 class User(db.Model):
@@ -6,6 +7,7 @@ class User(db.Model):
   username = db.Column(db.String(64), unique=True, nullable=False)
   email = db.Column(db.String(128), unique=True, nullable=False)    # In this case doesn't have to be an actual email
   password = db.Column(db.String(256), nullable=False)
+  avatar = db.Column(db.String(512), default='https://avatarfiles.alphacoders.com/101/thumb-1920-101741.jpg', nullable=True)
   votes = db.relationship('Vote', backref=db.backref('user', lazy=True))
 
   def __repr__(self):
@@ -18,12 +20,13 @@ class Poll(db.Model):
   topic = db.Column(db.String(128), nullable=False)
   options = db.relationship('Option', backref=db.backref('poll', lazy=True))
   votes = db.relationship('Vote', backref=db.backref('poll', lazy=True))
+  timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=True)
 
-  # returns true if given user voted in this poll
+
   def did_vote(self, id):
     """
     did_vote(user_id)
-    Returns True if user voted already
+    Returns True if user voted in this poll already
     """
     return any([user.id for user in self.votes if user.id == id])
 
