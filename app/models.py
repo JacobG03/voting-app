@@ -19,6 +19,10 @@ class Poll(db.Model):
   options = db.relationship('Option', backref=db.backref('poll', lazy=True))
   votes = db.relationship('Vote', backref=db.backref('poll', lazy=True))
 
+  # returns true if given user voted in this poll
+  def did_vote(self, id):
+    return any([user.id for user in self.votes if user.id == id])
+
   def __repr__(self):
     return f'{self.topic}'
 
