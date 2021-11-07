@@ -30,6 +30,6 @@ class CreateRegisterSchema(Schema):
 
 
 class CreateLoginSchema(Schema):
-  email = fields.Str(required=True, validate=Length(3, 64))
-  password = fields.Str(required=True, validate=Length(4, 128))
+  email = fields.Str(required=True)
+  password = fields.Str(required=True)
 

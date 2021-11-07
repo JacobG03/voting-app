@@ -1,11 +1,13 @@
 from app import app, db
 from app.models import User
 from flask import jsonify, request
-from app.schemas import CreateRegisterSchema
+from app.schemas import CreateRegisterSchema, CreateLoginSchema
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token, set_access_cookies
 
 
 registerSchema = CreateRegisterSchema()
+loginSchema = CreateLoginSchema()
 
 
 @app.get('/api')
@@ -17,7 +19,7 @@ def api():
 
 @app.post('/api/register')
 def register():
-  # receives data
+  # receive data
   data = request.get_json(silent=True)
   # validate data
   errors = registerSchema.validate(data)
@@ -26,7 +28,7 @@ def register():
       'errors': errors
     }), 422
 
-  # checks whether passwords are identical
+  # check whether passwords are identical
   elif data['password'] != data['password2']:
     return jsonify({
       'errors': {
@@ -38,6 +40,7 @@ def register():
   # hash password
   hashed_password = generate_password_hash(data['password'], method='sha256')
 
+  # create user
   user = User(
     username=data['username'],
     email=data['email'],
@@ -51,3 +54,32 @@ def register():
   }), 200
 
 
+@app.post('/api/login')
+def login():
+  # receive data
+  data = request.get_json(silent=True)
+  # validate data
+  errors = loginSchema.validate(data)
+  if errors:
+    return jsonify({
+      'errors': errors
+    }), 422
+
+  # check if user exists
+  user = User.query.filter_by(email=data['email']).first()
+  if user and check_password_hash(user.password, data['password']):
+    # crate token
+    access_token = create_access_token(identity=user)
+    # set token cookie in browser
+    set_access_cookies(jsonify({'token' : access_token}), access_token)
+    return jsonify({
+      'token' : access_token
+      }), 200
+
+  
+  return jsonify({
+      'errors': {
+        'email': ['Invalid fields'],
+        'password': ['Invalid fields']
+      }
+    }), 422
