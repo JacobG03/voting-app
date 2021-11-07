@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User
+from app.models import User, Poll
 from flask import jsonify, request
 from app.schemas import CreateRegisterSchema, CreateLoginSchema
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -95,3 +95,30 @@ def logout():
   })
   unset_jwt_cookies(response)
   return response, 200
+
+
+#? Get polls
+@app.get('/api/polls')
+@jwt_required()
+def get_polls():
+  polls = []
+  for poll in Poll.query.all():
+    polls.append({
+      'id': poll.id,
+      'topic': poll.topic,
+      'options': f'/polls/{poll.id}/options',
+      'votes': f'/polls/{poll.id}/votes'
+    })
+  return jsonify({
+    'polls': polls
+  }), 200
+
+
+#? Create Poll
+@app.post('/api/polls')
+@jwt_required()
+def create_poll():
+  #! Code
+  return jsonify({
+    'message': 'Poll created.'
+  }), 200
