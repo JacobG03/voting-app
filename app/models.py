@@ -21,6 +21,10 @@ class Poll(db.Model):
 
   # returns true if given user voted in this poll
   def did_vote(self, id):
+    """
+    did_vote(user_id)
+    Returns True if user voted already
+    """
     return any([user.id for user in self.votes if user.id == id])
 
   def __repr__(self):
