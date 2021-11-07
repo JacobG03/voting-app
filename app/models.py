@@ -45,13 +45,12 @@ class Poll(db.Model):
       db.session.delete(option)
     return True
 
-
-  def did_vote(self, id):
+  def did_vote(self, given_id):
     """
     did_vote(user_id)
     Returns True if user voted in this poll already
     """
-    return any([user.id for user in self.votes if user.id == id])
+    return any([vote for vote in self.votes if vote.user_id == given_id])
 
   def __repr__(self):
     return f'{self.topic}'
@@ -67,10 +66,13 @@ class Option(db.Model):
   votes = db.relationship('Vote', backref=db.backref('option', lazy=True))
 
   def __repr__(self):
-    return f'{self.body}'
+    return f'{self.id}'
 
 
 class Vote(db.Model):
+  """
+    Vote(anonymous:Boolean, user_id, poll_id, option_id)
+  """
   id = db.Column(db.Integer, primary_key=True)
   anonymous = db.Column(db.Boolean, default=True, nullable=False)
   user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -78,4 +80,4 @@ class Vote(db.Model):
   option_id = db.Column(db.Integer, db.ForeignKey('option.id'), nullable=False)
 
   def __repr__(self):
-    return f'{Option.query.get(self.id).body}'
+    return f'{self.anonymous}'

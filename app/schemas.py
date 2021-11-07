@@ -1,7 +1,6 @@
 from marshmallow import Schema, fields, validates, ValidationError
 from marshmallow.validate import Length
 import re
-from flask_jwt_extended import current_user
 from app.models import User
 from sqlalchemy import func
 
@@ -42,3 +41,7 @@ class CreatePollSchema(Schema):
 
 class CreateOptionSchema(Schema):
   body = fields.Str(required=True, validate=Length(1, 128))
+
+
+class CreateVoteSchema(Schema):
+  anonymous = fields.Bool(required=True)

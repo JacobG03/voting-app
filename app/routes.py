@@ -1,7 +1,7 @@
 from app import app, db
-from app.models import User, Poll, Option
+from app.models import User, Poll, Option, Vote
 from flask import jsonify, request
-from app.schemas import CreateRegisterSchema, CreateLoginSchema, CreatePollSchema, CreateOptionSchema
+from app.schemas import CreateRegisterSchema, CreateLoginSchema, CreatePollSchema, CreateOptionSchema, CreateVoteSchema
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies, current_user
 from dotenv import dotenv_values
@@ -14,6 +14,7 @@ registerSchema = CreateRegisterSchema()
 loginSchema = CreateLoginSchema()
 pollSchema = CreatePollSchema()
 optionSchema = CreateOptionSchema()
+voteSchema = CreateVoteSchema()
 
 
 @app.get('/api')
@@ -116,7 +117,8 @@ def get_polls():
   for poll in Poll.query.all():
     polls.append({
       'id': poll.id,
-      'user_url': f'{api_url}/users/{poll.user_id}',
+      'author_url': f'{api_url}/users/{poll.user_id}',
+      'timestamp': poll.timestamp,
       'topic': poll.topic,
       'options_url': f'{api_url}/polls/{poll.id}/options',
       'votes_url': f'{api_url}/polls/{poll.id}/votes'
@@ -152,7 +154,7 @@ def create_poll():
   # receive data
   data = request.get_json(silent=True)
   # validate data
-  errors =  pollSchema.validate(data)
+  errors = pollSchema.validate(data)
   if errors:
     return jsonify({
       'errors': errors
@@ -306,6 +308,7 @@ def get_user(id):
     return jsonify({
       'message': f'User with id: {id} does not exist'
     }), 500
+  
   # return user data
   return jsonify({
     'id': user.id,
@@ -315,5 +318,98 @@ def get_user(id):
 
 
 #? Create Vote
+@app.post('/api/polls/<poll_id>/options/<index>/votes')
+@jwt_required()
+def vote(poll_id, index):
+  poll = Poll.query.get(int(poll_id))
+  # throw error if poll doesnt exist
+  if not poll:
+    return jsonify({
+      'message': 'Poll with id: {id} does not exist.'
+    }), 500
+  
+  try:
+    option = poll.options[int(index)]
+  except IndexError:
+  # throw error if option doesnt exist
+    return jsonify({
+      'message': f'Poll with index: {index} does not exist'
+    }), 500
+
+  # receive data
+  data = request.get_json(silent=True)
+  errors = voteSchema.validate(data)
+  if errors:
+    return jsonify(errors), 422
+  
+  # do nothing if user already voted
+  if poll.did_vote(current_user.id):
+    return jsonify({
+      'message': 'You can only vote once.'
+    }), 200
+  
+  vote = Vote(
+    anonymous=data['anonymous'], 
+    user_id=current_user.id, 
+    poll_id=poll.id,
+    option_id=option.id
+    )
+  
+  db.session.add(vote)
+  db.session.commit()
+
+  return jsonify({
+    'message': 'Voted successfully.'
+  }), 200
+
+
 #? Get Polls Votes
+@app.get('/api/polls/<poll_id>/votes')
+@jwt_required()
+def get_poll_votes(poll_id):
+  poll = Poll.query.get(int(poll_id))
+  # throw error if poll doesnt exist
+  if not poll:
+    return jsonify({
+      'message': 'Poll with id: {id} does not exist.'
+    }), 500
+  
+  votes = []
+  for vote in poll.votes:
+    user = User.query.get(vote.user_id)
+    votes.append({
+      'username': user.username if vote.anonymous == False else 'Human',
+      'avatar': user.avatar if vote.anonymous == False else 'https://avatarfiles.alphacoders.com/101/thumb-1920-101741.jpg'
+    })
+  
+  return jsonify(votes), 200
+
+
 #? Get Option's Votes
+@app.get('/api/polls/<poll_id>/options/<index>/votes')
+@jwt_required()
+def get_option_votes(poll_id, index):
+  poll = Poll.query.get(int(poll_id))
+  # throw error if poll doesnt exist
+  if not poll:
+    return jsonify({
+      'message': 'Poll with id: {id} does not exist.'
+    }), 500
+  
+  try:
+    option = poll.options[int(index)]
+  except IndexError:
+  # throw error if option doesnt exist
+    return jsonify({
+      'message': f'Poll with index: {index} does not exist'
+    }), 500
+
+  votes = []
+  for vote in option.votes:
+    user = User.query.get(vote.user_id)
+    votes.append({
+      'username': user.username if vote.anonymous == False else 'Human',
+      'avatar': user.avatar if vote.anonymous == False else 'https://avatarfiles.alphacoders.com/101/thumb-1920-101741.jpg'
+    })
+  
+  return jsonify(votes), 200
