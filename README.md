@@ -1,4 +1,4 @@
-# Task - *VOTING APP*
+# Task - ## *VOTING APP*
 
 🛠️ Difficulty Level: Intermediate
 🗓️ Start: November 5th
