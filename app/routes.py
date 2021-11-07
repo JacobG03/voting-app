@@ -1,9 +1,9 @@
 from app import app, db
 from app.models import User, Poll
-from flask import jsonify, request
+from flask import json, jsonify, request
 from app.schemas import CreateRegisterSchema, CreateLoginSchema
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies
+from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies, current_user
 
 
 registerSchema = CreateRegisterSchema()
@@ -16,6 +16,15 @@ def api():
   return jsonify({
     'message': 'It appears that the API should technically maybe work. :)'
   }), 200
+
+
+@app.get('/api/refresh')
+@jwt_required()
+def refresh():
+  response = jsonify()
+  access_token = create_access_token(identity=current_user)
+  set_access_cookies(response, access_token)
+  return response, 200
 
 
 @app.post('/api/register')
