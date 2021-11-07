@@ -27,3 +27,5 @@ Link coming soon
 https://firebase.google.com/
 https://www.heroku.com/postgres
 
+
+# Time spent - *4 hours*
