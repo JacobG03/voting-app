@@ -13,4 +13,4 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 CORS(app)
 
-from app import routes
+from app import auth, routes
