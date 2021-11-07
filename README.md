@@ -29,3 +29,5 @@ https://www.heroku.com/postgres
 
 
 # Time spent - *4 hours*
+
+# [] Allow author to decide whether voters will be anonymous or not.

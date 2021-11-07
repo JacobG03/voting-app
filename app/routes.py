@@ -1,7 +1,7 @@
 from app import app, db
 from app.models import User, Poll, Option
 from flask import jsonify, request
-from app.schemas import CreateRegisterSchema, CreateLoginSchema, CreatePollSchema
+from app.schemas import CreateRegisterSchema, CreateLoginSchema, CreatePollSchema, CreateOptionSchema
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies, current_user
 from dotenv import dotenv_values
@@ -13,6 +13,7 @@ api_url = dotenv_values('.env')['ROOT_URL']
 registerSchema = CreateRegisterSchema()
 loginSchema = CreateLoginSchema()
 pollSchema = CreatePollSchema()
+optionSchema = CreateOptionSchema()
 
 
 @app.get('/api')
@@ -39,18 +40,15 @@ def register():
   # validate data
   errors = registerSchema.validate(data)
   if errors:
-    return jsonify({
-      'errors': errors
-    }), 422
+    return jsonify(errors), 422
 
   # check whether passwords are identical
   elif data['password'] != data['password2']:
     return jsonify({
-      'errors': {
         'password': ['Passwords must match'],
         'password2': ['Passwords must match']
       }
-    }), 422
+    ), 422
 
   # hash password
   hashed_password = generate_password_hash(data['password'], method='sha256')
@@ -200,3 +198,113 @@ def delete_poll(id):
   }), 200
 
 
+#? Get all options of specified poll
+@app.get('/api/polls/<poll_id>/options')
+def get_options(poll_id):
+  response = []
+  poll = Poll.query.get(int(poll_id))
+  if not poll:
+    return jsonify({
+      'message': f'Poll with id: {poll_id} does not exist'
+    }), 500
+  for option in poll.options:
+    response.append({
+      'id': option.id,
+      'body': option.body,
+      'votes_url': f'{api_url}/polls/{poll_id}/options/{option.id}/votes'
+    })
+  
+  return jsonify(response), 200
+
+
+#? Get specific option of a specific poll
+@app.get('/api/polls/<poll_id>/options/<option_id>')
+def get_option(poll_id, option_id):
+  poll = Poll.query.get(int(poll_id))
+  # throw error if poll doesnt exist
+  if not poll:
+    return jsonify({
+      'message': 'Poll with id: {id} does not exist.'
+    }), 500
+  option = Option.query.get(int(option_id))
+  # throw error if option doesnt exist
+  if not option:
+    return jsonify({
+      'message': 'Poll with id: {id} does not exist.'
+    }), 500
+
+  # if all OK
+  return jsonify({
+    'id': option.id,
+    'body': option.body,
+    'votes_url': f'{api_url}/polls/{poll_id}/options/{option.id}/votes',
+    'poll_url': f'{api_url}/polls/{poll_id}'
+  }), 200
+
+
+"""
+#! Unnecessary for this project, polls will be created once and without ability to edit
+#! Reason for this is that changing context of a poll sucks + it will make implementing socketio harded
+#? Create option for a specific pool
+@app.post('/api/polls/<poll_id>/options')
+@jwt_required()
+def create_option(poll_id):
+  poll = Poll.query.get(int(poll_id))
+  # throw error if poll doesnt exist
+  if not poll:
+    return jsonify({
+      'message': 'Poll with id: {id} does not exist.'
+    }), 500
+
+  # receive data
+  data = request.get_json(silent=True)
+  # validate data
+  errors = optionSchema.validate(data)
+  if errors:
+    return jsonify({
+      'errors': errors,
+    }), 422
+
+  # check if its unique in its own poll
+  if any(option.body for option in poll.options if option.body == data['body']):
+    return jsonify({
+      'errors': {
+        'body': ['Each option must be unique.']
+      }
+    }), 422
+
+  option = Option(poll_id=poll.id, body=data['body'])
+  db.session.add(option)
+  db.session.commit()
+
+  return jsonify({
+    'message': 'Option added.'
+  }), 200
+"""
+
+
+@app.get('/api/users')
+def get_users():
+  users = []
+  for user in User.query.all():
+    users.append({
+      'id': user.id,
+      'username': user.username,
+      'avatar': user.avatar
+    })
+  return jsonify(users), 200
+
+
+@app.get('/api/users/<id>')
+def get_user(id):
+  user = User.query.get(int(id))
+  if not user:
+    return jsonify({
+      'message': f'User with id: {id} does not exist'
+    }), 500
+    
+  return jsonify({
+    'id': user.id,
+    'username': user.username,
+    'avatar': user.avatar
+  }), 200
