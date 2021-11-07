@@ -1,4 +1,4 @@
-# Task - ## *VOTING APP*
+# Task - *VOTING APP*
 
 🛠️ Difficulty Level: Intermediate
 🗓️ Start: November 5th
@@ -7,7 +7,7 @@
 📝 Project Description
 Allow users to vote give multiple choices
 
- 📔 User Stories
+📔 User Stories
 1. User must enter their name to take part in a poll
 2. User is shown multiple polls that they can choose from
 3. After clicking on a poll, user is shown a voting screen where they can vote on that poll
@@ -27,6 +27,3 @@ Link coming soon
 https://firebase.google.com/
 https://www.heroku.com/postgres
 
-
-
-# Process
