@@ -1,3 +1,4 @@
+from flask_jwt_extended.view_decorators import jwt_required
 from app import app, db
 from app.models import User
 from flask import jsonify, request
@@ -8,7 +9,6 @@ from flask_jwt_extended import create_access_token, set_access_cookies
 
 registerSchema = CreateRegisterSchema()
 loginSchema = CreateLoginSchema()
-
 
 @app.get('/api')
 def api():
@@ -56,6 +56,9 @@ def register():
 
 @app.post('/api/login')
 def login():
+  response = jsonify({
+    'message': 'Login successfull.'
+  })
   # receive data
   data = request.get_json(silent=True)
   # validate data
@@ -71,10 +74,9 @@ def login():
     # crate token
     access_token = create_access_token(identity=user)
     # set token cookie in browser
-    set_access_cookies(jsonify({'token' : access_token}), access_token)
-    return jsonify({
-      'token' : access_token
-      }), 200
+    set_access_cookies(response, access_token)
+
+    return response
 
   
   return jsonify({
