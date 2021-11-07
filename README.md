@@ -28,7 +28,7 @@ https://firebase.google.com/
 https://www.heroku.com/postgres
 
 
-# Time spent - *4 hours*
+# Total time spent on this project - *7 hours*
 
 # [] Allow voters decide whether their vote will be public or hidden 
 # [] Allow user to have a maximum of 3 polls at once.
