@@ -116,10 +116,10 @@ def get_polls():
   for poll in Poll.query.all():
     polls.append({
       'id': poll.id,
-      'user': f'{api_url}/users/{User.query.get(poll.user_id).username}',
+      'user_url': f'{api_url}/users/{poll.user_id}',
       'topic': poll.topic,
-      'options': f'{api_url}/polls/{poll.id}/options',
-      'votes': f'{api_url}/polls/{poll.id}/votes'
+      'options_url': f'{api_url}/polls/{poll.id}/options',
+      'votes_url': f'{api_url}/polls/{poll.id}/votes'
     })
   return jsonify({
     'polls': polls
@@ -137,7 +137,7 @@ def get_poll(id):
   
   return jsonify({
     'id': poll.id,
-    'author_url': f'{api_url}/users/{User.query.get(poll.user_id).username}',
+    'author_url': f'{api_url}/users/{poll.user_id}',
     'topic': poll.topic,
     'timestamp': poll.timestamp,
     'options_url': f'{api_url}/polls/{poll.id}/options',
@@ -207,37 +207,39 @@ def get_options(poll_id):
     return jsonify({
       'message': f'Poll with id: {poll_id} does not exist'
     }), 500
-  for option in poll.options:
+  
+  for index, option in enumerate(poll.options):
     response.append({
-      'id': option.id,
+      'index': index,
       'body': option.body,
-      'votes_url': f'{api_url}/polls/{poll_id}/options/{option.id}/votes'
+      'votes_url': f'{api_url}/polls/{poll_id}/options/{index}/votes'
     })
   
   return jsonify(response), 200
 
 
 #? Get specific option of a specific poll
-@app.get('/api/polls/<poll_id>/options/<option_id>')
-def get_option(poll_id, option_id):
+@app.get('/api/polls/<poll_id>/options/<index>')
+def get_option(poll_id, index):
   poll = Poll.query.get(int(poll_id))
   # throw error if poll doesnt exist
   if not poll:
     return jsonify({
       'message': 'Poll with id: {id} does not exist.'
     }), 500
-  option = Option.query.get(int(option_id))
-  # throw error if option doesnt exist
-  if not option:
+  
+  try:
+    option = poll.options[int(index)]
+  except IndexError:
     return jsonify({
-      'message': 'Poll with id: {id} does not exist.'
+      'message': f'Poll with index: {index} does not exist'
     }), 500
 
   # if all OK
   return jsonify({
-    'id': option.id,
+    'index': index,
     'body': option.body,
-    'votes_url': f'{api_url}/polls/{poll_id}/options/{option.id}/votes',
+    'votes_url': f'{api_url}/polls/{poll_id}/options/{index}/votes',
     'poll_url': f'{api_url}/polls/{poll_id}'
   }), 200
 
@@ -285,6 +287,7 @@ def create_option(poll_id):
 
 @app.get('/api/users')
 def get_users():
+  # return users data
   users = []
   for user in User.query.all():
     users.append({
@@ -297,14 +300,20 @@ def get_users():
 
 @app.get('/api/users/<id>')
 def get_user(id):
+  # check if user exists
   user = User.query.get(int(id))
   if not user:
     return jsonify({
       'message': f'User with id: {id} does not exist'
     }), 500
-    
+  # return user data
   return jsonify({
     'id': user.id,
     'username': user.username,
     'avatar': user.avatar
   }), 200
+
+
+#? Create Vote
+#? Get Polls Votes
+#? Get Option's Votes
