@@ -4,6 +4,10 @@ from flask import jsonify, request
 from app.schemas import CreateRegisterSchema, CreateLoginSchema, CreatePollSchema
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies, current_user
+from dotenv import dotenv_values
+
+
+api_url = dotenv_values('.env')['ROOT_URL']
 
 
 registerSchema = CreateRegisterSchema()
@@ -107,21 +111,39 @@ def logout():
   return response, 200
 
 
-#? Get polls
+#? Get all polls
 @app.get('/api/polls')
-@jwt_required()
 def get_polls():
   polls = []
   for poll in Poll.query.all():
     polls.append({
       'id': poll.id,
-      'user': f'/users/{User.query.get(poll.user_id).username}',
+      'user': f'{api_url}/users/{User.query.get(poll.user_id).username}',
       'topic': poll.topic,
-      'options': f'/polls/{poll.id}/options',
-      'votes': f'/polls/{poll.id}/votes'
+      'options': f'{api_url}/polls/{poll.id}/options',
+      'votes': f'{api_url}/polls/{poll.id}/votes'
     })
   return jsonify({
     'polls': polls
+  }), 200
+
+
+#? Get specific poll
+@app.get('/api/polls/<id>')
+def get_poll(id):
+  poll = Poll.query.get(int(id))
+  if not poll:
+    return jsonify({
+      'message': f'Poll with id: {id} does not exist.'
+    }), 500
+  
+  return jsonify({
+    'id': poll.id,
+    'author_url': f'{api_url}/users/{User.query.get(poll.user_id).username}',
+    'topic': poll.topic,
+    'timestamp': poll.timestamp,
+    'options_url': f'{api_url}/polls/{poll.id}/options',
+    'votes_url': f'{api_url}/polls/{poll.id}/votes'
   }), 200
 
 
@@ -152,3 +174,29 @@ def create_poll():
   return jsonify({
     'message': 'Poll created.'
   }), 200
+
+
+#? Delete Poll
+@app.delete('/api/polls/<id>')
+@jwt_required()
+def delete_poll(id):
+  poll = Poll.query.get(int(id))
+  if not poll:
+    return jsonify({
+      'message': 'Poll with id: {id} does not exist.'
+    }), 500
+  
+  if poll.user_id != current_user.id:
+    return jsonify({
+      'message': 'Action denied.'
+    }), 500
+
+  # deletes poll
+  poll.desctruction()
+  db.session.commit()
+
+  return jsonify({
+    'message': 'Poll deleted successfully.'
+  }), 200
+
+

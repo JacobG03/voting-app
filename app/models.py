@@ -26,6 +26,26 @@ class Poll(db.Model):
   timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=True)
 
 
+  def desctruction(self):
+    # delete all option votes
+    self.delete_votes()
+    # delete all options
+    self.delete_options()
+    # delete self
+    db.session.delete(self)
+    return True
+
+  def delete_votes(self):
+    for vote in self.votes:
+      db.session.delete(vote)
+    return True
+
+  def delete_options(self):
+    for option in self.options:
+      db.session.delete(option)
+    return True
+
+
   def did_vote(self, id):
     """
     did_vote(user_id)
