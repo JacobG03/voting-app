@@ -18,10 +18,15 @@ voteSchema = CreateVoteSchema()
 
 
 @app.get('/api')
-@jwt_required()
 def api():
   return jsonify({
-    'message': 'It appears that the API should technically maybe work. :)'
+    'message': 'It appears that the API should technically maybe work. :)',
+    'routes': [
+      f'{api_url}/api/login',
+      f'{api_url}/api/polls/:id',
+      f'{api_url}/api/polls/:id/options',
+      f'{api_url}/api/polls/:id/options/:index',
+    ]
   }), 200
 
 
@@ -285,6 +290,15 @@ def create_option(poll_id):
     'message': 'Option added.'
   }), 200
 """
+
+@app.get('/api/user')
+@jwt_required()
+def user():
+  return jsonify({
+    'id': current_user.id,
+    'username': current_user.username,
+    'avatar': current_user.avatar
+  })
 
 
 @app.get('/api/users')
