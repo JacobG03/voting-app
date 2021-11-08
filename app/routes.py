@@ -373,6 +373,10 @@ def get_poll_votes(poll_id):
     return jsonify({
       'message': 'Poll with id: {id} does not exist.'
     }), 500
+
+  # prevent user that didnt vote from seeing the results
+  if not poll.did_vote(current_user.id):
+    return jsonify({}), 403
   
   votes = []
   for vote in poll.votes:
@@ -403,6 +407,10 @@ def get_option_votes(poll_id, index):
     return jsonify({
       'message': f'Poll with index: {index} does not exist'
     }), 500
+
+  # prevent user that didnt vote from seeing the results
+  if not poll.did_vote(current_user.id):
+    return jsonify({}), 403
 
   votes = []
   for vote in option.votes:

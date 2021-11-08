@@ -28,9 +28,10 @@ https://firebase.google.com/
 https://www.heroku.com/postgres
 
 
+
 # Total time spent on this project - *7 hours*
 
-# [] Allow voters decide whether their vote will be public or hidden 
-# [] Allow user to have a maximum of 3 polls at once.
-# [] Allow user to set how long the poll should exist
-# [] Block user from voting twice
+# [#] Allow voters decide whether their vote will be public or hidden
+# [#] Block user from voting twice
+# [*] Never let a user be able to see the results without voting
+    Which means that the polls will be up infinetely or until author deletes it
