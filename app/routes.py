@@ -4,10 +4,6 @@ from flask import jsonify, request
 from app.schemas import CreateRegisterSchema, CreateLoginSchema, CreatePollSchema, CreateOptionSchema, CreateVoteSchema
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies, current_user
-from dotenv import dotenv_values
-
-
-api_url = dotenv_values('.env')['ROOT_URL']
 
 
 registerSchema = CreateRegisterSchema()
@@ -22,10 +18,10 @@ def api():
   return jsonify({
     'msg': 'It appears that the API should technically maybe work. :)',
     'routes': [
-      f'{api_url}/api/login',
-      f'{api_url}/api/polls/:id',
-      f'{api_url}/api/polls/:id/options',
-      f'{api_url}/api/polls/:id/options/:index',
+      '/api/login',
+      '/api/polls/:id',
+      '/api/polls/:id/options',
+      '/api/polls/:id/options/:index',
     ]
   }), 200
 
@@ -119,18 +115,16 @@ def logout():
 @app.get('/api/polls')
 def get_polls():
   polls = []
-  for poll in Poll.query.all():
+  for poll in Poll.query.order_by(Poll.id.desc()).all():
     polls.append({
       'id': poll.id,
-      'author_url': f'{api_url}/users/{poll.user_id}',
+      'author_url': f'/users/{poll.user_id}',
       'timestamp': poll.timestamp,
       'topic': poll.topic,
-      'options_url': f'{api_url}/polls/{poll.id}/options',
-      'votes_url': f'{api_url}/polls/{poll.id}/votes'
+      'options_url': f'/polls/{poll.id}/options',
+      'votes_url': f'/polls/{poll.id}/votes'
     })
-  return jsonify({
-    'polls': polls
-  }), 200
+  return jsonify(polls), 200
 
 
 #? Get specific poll
@@ -144,11 +138,11 @@ def get_poll(id):
   
   return jsonify({
     'id': poll.id,
-    'author_url': f'{api_url}/users/{poll.user_id}',
+    'author_url': f'/users/{poll.user_id}',
     'topic': poll.topic,
     'timestamp': poll.timestamp,
-    'options_url': f'{api_url}/polls/{poll.id}/options',
-    'votes_url': f'{api_url}/polls/{poll.id}/votes'
+    'options_url': f'/polls/{poll.id}/options',
+    'votes_url': f'/polls/{poll.id}/votes'
   }), 200
 
 
@@ -219,7 +213,7 @@ def get_options(poll_id):
     response.append({
       'index': index,
       'body': option.body,
-      'votes_url': f'{api_url}/polls/{poll_id}/options/{index}/votes'
+      'votes_url': f'/polls/{poll_id}/options/{index}/votes'
     })
   
   return jsonify(response), 200
@@ -246,8 +240,8 @@ def get_option(poll_id, index):
   return jsonify({
     'index': index,
     'body': option.body,
-    'votes_url': f'{api_url}/polls/{poll_id}/options/{index}/votes',
-    'poll_url': f'{api_url}/polls/{poll_id}'
+    'votes_url': f'/polls/{poll_id}/options/{index}/votes',
+    'poll_url': f'/polls/{poll_id}'
   }), 200
 
 
@@ -434,4 +428,7 @@ def get_option_votes(poll_id, index):
       'avatar': user.avatar if vote.anonymous == False else 'https://avatarfiles.alphacoders.com/101/thumb-1920-101741.jpg'
     })
   
-  return jsonify(votes), 200
+  return jsonify({
+    'voted': option.did_vote(current_user.id),
+    'votes': votes
+  }), 200

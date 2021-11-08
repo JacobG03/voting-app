@@ -65,6 +65,13 @@ class Option(db.Model):
   body = db.Column(db.String(128), nullable=False)
   votes = db.relationship('Vote', backref=db.backref('option', lazy=True))
 
+  def did_vote(self, given_id):
+    """
+    did_vote(user_id)
+    Returns True if user voted in this poll already
+    """
+    return any([vote for vote in self.votes if vote.user_id == given_id])
+
   def __repr__(self):
     return f'{self.id}'
 

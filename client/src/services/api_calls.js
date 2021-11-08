@@ -4,6 +4,7 @@ export async function getData(endpoint) {
     mode: 'cors',
     credentials: 'same-origin',
   })
+  .then(r => r.json().then(data => ({status: r.status, body:data})))
   return response;
 }
 
@@ -18,5 +19,5 @@ export async function postData(endpoint, data={}) {
     },
     body: JSON.stringify(data)
   });
-  return response;
+  return response.json();
 }
