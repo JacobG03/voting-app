@@ -29,9 +29,20 @@ https://www.heroku.com/postgres
 
 
 
-# Total time spent on this project - *7 hours*
+# Total time spent on this project - *11 hours*
 
-# [#] Allow voters decide whether their vote will be public or hidden
-# [#] Block user from voting twice
-# [*] Never let a user be able to see the results without voting
+# API
+## [#] Allow voters decide whether their vote will be public or hidden
+## [#] Block user from voting twice
+## [*] Never let a user be able to see the results without voting
     Which means that the polls will be up infinetely or until author deletes it
+
+# Client 
+## [] When already voted see total votes on right side of option (always)
+### [] Allow user which already voted to switch between displaying "option body" or "option votings" (a bunch of small avatars) on single tap
+## [] Poll Deletion button if state user.username === poll.username
+## [] Poll Creation (always on top of screen)
+## [] Register
+## [] Login
+## [] Animations
+## [] Responsiveness
