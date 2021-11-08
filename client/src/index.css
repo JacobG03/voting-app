@@ -1,0 +1,9 @@
+:root {
+  --this: that;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
