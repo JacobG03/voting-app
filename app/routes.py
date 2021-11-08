@@ -20,7 +20,7 @@ voteSchema = CreateVoteSchema()
 @app.get('/api')
 def api():
   return jsonify({
-    'message': 'It appears that the API should technically maybe work. :)',
+    'msg': 'It appears that the API should technically maybe work. :)',
     'routes': [
       f'{api_url}/api/login',
       f'{api_url}/api/polls/:id',
@@ -69,14 +69,14 @@ def register():
   db.session.commit()
 
   return jsonify({
-    'message': 'User created successfully.'
+    'msg': 'User created successfully.'
   }), 200
 
 
 @app.post('/api/login')
 def login():
   response = jsonify({
-    'message': 'Login successfull.'
+    'msg': 'Login successfull.'
   })
   # receive data
   data = request.get_json(silent=True)
@@ -109,7 +109,7 @@ def login():
 @app.get('/api/logout')
 def logout():
   response = jsonify({
-    'message': 'Logged out successfully.'
+    'msg': 'Logged out successfully.'
   })
   unset_jwt_cookies(response)
   return response, 200
@@ -139,7 +139,7 @@ def get_poll(id):
   poll = Poll.query.get(int(id))
   if not poll:
     return jsonify({
-      'message': f'Poll with id: {id} does not exist.'
+      'msg': f'Poll with id: {id} does not exist.'
     }), 500
   
   return jsonify({
@@ -177,7 +177,7 @@ def create_poll():
   db.session.commit()
   
   return jsonify({
-    'message': 'Poll created.'
+    'msg': 'Poll created.'
   }), 200
 
 
@@ -188,12 +188,12 @@ def delete_poll(id):
   poll = Poll.query.get(int(id))
   if not poll:
     return jsonify({
-      'message': 'Poll with id: {id} does not exist.'
+      'msg': 'Poll with id: {id} does not exist.'
     }), 500
   
   if poll.user_id != current_user.id:
     return jsonify({
-      'message': 'Action denied.'
+      'msg': 'Action denied.'
     }), 500
 
   # deletes poll
@@ -201,7 +201,7 @@ def delete_poll(id):
   db.session.commit()
 
   return jsonify({
-    'message': 'Poll deleted successfully.'
+    'msg': 'Poll deleted successfully.'
   }), 200
 
 
@@ -212,7 +212,7 @@ def get_options(poll_id):
   poll = Poll.query.get(int(poll_id))
   if not poll:
     return jsonify({
-      'message': f'Poll with id: {poll_id} does not exist'
+      'msg': f'Poll with id: {poll_id} does not exist'
     }), 500
   
   for index, option in enumerate(poll.options):
@@ -232,14 +232,14 @@ def get_option(poll_id, index):
   # throw error if poll doesnt exist
   if not poll:
     return jsonify({
-      'message': 'Poll with id: {id} does not exist.'
+      'msg': 'Poll with id: {id} does not exist.'
     }), 500
   
   try:
     option = poll.options[int(index)]
   except IndexError:
     return jsonify({
-      'message': f'Poll with index: {index} does not exist'
+      'msg': f'Poll with index: {index} does not exist'
     }), 500
 
   # if all OK
@@ -262,7 +262,7 @@ def create_option(poll_id):
   # throw error if poll doesnt exist
   if not poll:
     return jsonify({
-      'message': 'Poll with id: {id} does not exist.'
+      'msg': 'Poll with id: {id} does not exist.'
     }), 500
 
   # receive data
@@ -287,7 +287,7 @@ def create_option(poll_id):
   db.session.commit()
 
   return jsonify({
-    'message': 'Option added.'
+    'msg': 'Option added.'
   }), 200
 """
 
@@ -298,7 +298,7 @@ def user():
     'id': current_user.id,
     'username': current_user.username,
     'avatar': current_user.avatar
-  })
+  }), 200
 
 
 @app.get('/api/users')
@@ -320,7 +320,7 @@ def get_user(id):
   user = User.query.get(int(id))
   if not user:
     return jsonify({
-      'message': f'User with id: {id} does not exist'
+      'msg': f'User with id: {id} does not exist'
     }), 500
   
   # return user data
@@ -339,7 +339,7 @@ def vote(poll_id, index):
   # throw error if poll doesnt exist
   if not poll:
     return jsonify({
-      'message': 'Poll with id: {id} does not exist.'
+      'msg': 'Poll with id: {id} does not exist.'
     }), 500
   
   try:
@@ -347,7 +347,7 @@ def vote(poll_id, index):
   except IndexError:
   # throw error if option doesnt exist
     return jsonify({
-      'message': f'Poll with index: {index} does not exist'
+      'msg': f'Poll with index: {index} does not exist'
     }), 500
 
   # receive data
@@ -359,7 +359,7 @@ def vote(poll_id, index):
   # do nothing if user already voted
   if poll.did_vote(current_user.id):
     return jsonify({
-      'message': 'You can only vote once.'
+      'msg': 'You can only vote once.'
     }), 200
   
   vote = Vote(
@@ -373,7 +373,7 @@ def vote(poll_id, index):
   db.session.commit()
 
   return jsonify({
-    'message': 'Voted successfully.'
+    'msg': 'Voted successfully.'
   }), 200
 
 
@@ -385,7 +385,7 @@ def get_poll_votes(poll_id):
   # throw error if poll doesnt exist
   if not poll:
     return jsonify({
-      'message': 'Poll with id: {id} does not exist.'
+      'msg': 'Poll with id: {id} does not exist.'
     }), 500
 
   # prevent user that didnt vote from seeing the results
@@ -411,7 +411,7 @@ def get_option_votes(poll_id, index):
   # throw error if poll doesnt exist
   if not poll:
     return jsonify({
-      'message': 'Poll with id: {id} does not exist.'
+      'msg': 'Poll with id: {id} does not exist.'
     }), 500
   
   try:
@@ -419,7 +419,7 @@ def get_option_votes(poll_id, index):
   except IndexError:
   # throw error if option doesnt exist
     return jsonify({
-      'message': f'Poll with index: {index} does not exist'
+      'msg': f'Poll with index: {index} does not exist'
     }), 500
 
   # prevent user that didnt vote from seeing the results

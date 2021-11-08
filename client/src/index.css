@@ -1,11 +1,13 @@
 :root {
-  --this: that;
+  --color: #00ABE1;
+  --color-dark: #161F6D;
+  --color-text: #fff;
 }
 
 * {
   margin: 0;
   padding: 0;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 body {

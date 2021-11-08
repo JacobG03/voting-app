@@ -1,10 +1,17 @@
 import styles from  './App.module.css';
+import {
+  useContext,
+  useEffect,
+  useState
+} from 'react';
+import { getData, postData } from './services/api_calls';
 
 
 function App() {
+  
   return (
-    <div className="App">
-      <h1>Hello World</h1>
+    <div className={styles.App}>
+      
     </div>
   );
 }
