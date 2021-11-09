@@ -14,11 +14,19 @@ function Polls (props) {
     getData('/polls')
     .then(data => {
       if (data.status === 200) {
-        setPolls(data.body)
+        setPolls(false)
       }
     })
   }, [props.user])
 
+  if (polls === false){
+    getData('/polls')
+    .then(data => {
+      if (data.status === 200) {
+        setPolls(data.body)
+      }
+    })
+  }
 
   if (!polls) {
     return null;
@@ -149,7 +157,7 @@ function ShowVotes (props) {
       onClick={() => setDisplay(!display)}
     >
       <div className={styles.option_avatars}>
-        {props.votes.map(vote => <img src={vote.avatar} alt='user'/>)}
+        {props.votes.map(vote => <img src={vote.avatar} key={vote.username} alt='user'/>)}
       </div>
       <div className={styles.option_votes}>
         {props.votes.length}
