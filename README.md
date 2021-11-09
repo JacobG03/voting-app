@@ -38,11 +38,16 @@ https://www.heroku.com/postgres
     Which means that the polls will be up infinetely or until author deletes it
 
 # Client 
-## [] When already voted see total votes on right side of option (always)
+## [*] When already voted see total votes on right side of option (always)
 ### [] Allow user which already voted to switch between displaying "option body" or "option votings" (a bunch of small avatars) on single tap
 ## [] Poll Deletion button if state user.username === poll.username
 ## [] Poll Creation (always on top of screen)
-## [] Register
-## [] Login
+## [*] Register
+## [*] Login
 ## [] Animations
 ## [] Responsiveness
+
+
+
+*key mistake in frotnend*
+components have problems rerendering because of the way they receive data. next time i will do this on a parent components and have its children not worry about fetching data or at least limit it

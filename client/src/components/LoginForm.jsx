@@ -46,8 +46,13 @@ function LoginForm (props) {
         {errors.password && <span>This field is required</span>}
       </div>
       
-      <input type="submit" className={styles.submit} />
-      <span className={styles.switch} onClick={() => props.changeForm(last => !last)}>Register</span>
+      <input type="submit" className={styles.submit} value='Sign In'/>
+      <span 
+        className={styles.switch}
+        onClick={() => props.changeForm(last => !last)}
+      >
+        Register
+      </span>
     </form>
   );
 }
@@ -80,7 +85,7 @@ function RegisterForm (props) {
         <span>Repeat Password:</span>
         <input type='password' {...register("password2", { required: true , minLength: 3, maxLength: 256})} />
       </div>
-      <input type="submit" className={styles.submit} />
+      <input type="submit" className={styles.submit} value='Sign Up'/>
       <span className={styles.switch} onClick={() => props.changeForm(last => !last)}>Login</span>
     </form>
   );

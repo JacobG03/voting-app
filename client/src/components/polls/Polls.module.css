@@ -79,3 +79,12 @@
   border: 2px solid var(--color);
   color: #fff;
 }
+
+.poll_votes {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 1rem;
+  font-weight: 500;
+  font-size: 1rem;
+}

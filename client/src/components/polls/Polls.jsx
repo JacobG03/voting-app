@@ -9,13 +9,7 @@ import { getData, postData } from '../../services/api_calls'
 
 function Polls (props) {
   const [polls, setPolls] = useState(null)
-
-  useEffect(() => {
-    if (!props.user) {
-      setPolls(null)
-    }
-  }, [props.user])
-
+  
   useEffect(() => {
     getData('/polls')
     .then(data => {
@@ -23,7 +17,8 @@ function Polls (props) {
         setPolls(data.body)
       }
     })
-  }, [polls])
+  }, [props.user])
+
 
   if (!polls) {
     return null;
@@ -39,7 +34,6 @@ function Polls (props) {
 
 function Poll (props) {
   const data = props.data;
-
   return (
     <div className={styles.poll}>
       <PollAuthor url={data.author_url} />
@@ -48,6 +42,7 @@ function Poll (props) {
         <span>{data.topic}</span>
       </div>
       <Options url={data.options_url} user={props.user}/>
+      <span className={styles.poll_votes}>{data.votes}</span>
     </div>
   )
 }
