@@ -97,7 +97,7 @@ function Option (props) {
     if (props.user) {
       getData(data.votes_url)
       .then(data => {
-        if (data.status === 403) {
+        if (data.status === 202) {
           // let user vote
           setVotes(true)
         } else if (data.status === 200) {

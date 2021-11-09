@@ -22,6 +22,8 @@
   background-color: var(--color);
   border: none;
   padding: 0.6rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   border-radius: var(--border-radius);
   color: var(--color-text);
   box-shadow: var(--height);

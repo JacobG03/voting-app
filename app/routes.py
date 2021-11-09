@@ -386,7 +386,7 @@ def get_poll_votes(poll_id):
 
   # prevent user that didnt vote from seeing the results
   if not poll.did_vote(current_user.id):
-    return jsonify({}), 403
+    return jsonify({}), 202
   
   votes = []
   for vote in poll.votes:
@@ -420,7 +420,7 @@ def get_option_votes(poll_id, index):
 
   # prevent user that didnt vote from seeing the results
   if not poll.did_vote(current_user.id):
-    return jsonify({}), 403
+    return jsonify({}), 202
 
   votes = []
   for vote in option.votes:
