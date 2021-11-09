@@ -8,7 +8,7 @@ function Form (props) {
   const [form, changeForm] = useState(false)
 
   if (!form) {
-    return <LoginForm setUser={props.setUser}/>
+    return <LoginForm setUser={props.setUser} displayForm={props.displayForm}/>
   }
   return <RegisterForm changeForm={changeForm} />
 }
@@ -24,6 +24,7 @@ function LoginForm (props) {
         .then(obj => {
           if(obj.status === 200) {
             props.setUser(obj.body)
+            props.displayForm(false)
           }
         })
       }

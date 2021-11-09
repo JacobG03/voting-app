@@ -30,7 +30,7 @@ function App() {
     <div className={styles.App}>
       <Navbar user={user} setUser={setUser} displayForm={displayForm}/>
       <div className={styles.content}>
-        {form ? <Form setUser={setUser}/>: null}
+        {form ? <Form setUser={setUser} displayForm={displayForm}/>: null}
         {user ? <CreatePoll />: null}
         <Polls user={user}/>
       </div>
