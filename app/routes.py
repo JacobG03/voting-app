@@ -118,6 +118,7 @@ def get_polls():
   for poll in Poll.query.order_by(Poll.id.desc()).all():
     polls.append({
       'id': poll.id,
+      'votes': len(poll.votes),
       'author_url': f'/users/{poll.user_id}',
       'timestamp': poll.timestamp,
       'topic': poll.topic,
@@ -138,6 +139,7 @@ def get_poll(id):
   
   return jsonify({
     'id': poll.id,
+    'votes': len(poll.votes),
     'author_url': f'/users/{poll.user_id}',
     'topic': poll.topic,
     'timestamp': poll.timestamp,

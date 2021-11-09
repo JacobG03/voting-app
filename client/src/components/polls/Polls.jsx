@@ -1,10 +1,10 @@
-import styles from './Poll.module.css'
+import styles from './Polls.module.css'
 import {
   useEffect,
   useState,
   useCallback
 } from 'react'
-import { getData, postData } from '../services/api_calls'
+import { getData, postData } from '../../services/api_calls'
 
 
 function Polls (props) {
@@ -14,10 +14,12 @@ function Polls (props) {
     getData('/polls')
     .then(data => {
       if (data.status === 200) {
+        setPolls(null)
         setPolls(data.body)
       }
     })
-  }, [])
+  }, [props.user])
+
 
   if (!polls) {
     return null;
@@ -25,21 +27,14 @@ function Polls (props) {
 
   return (
     <div className={styles.polls}>
-      {polls.map(poll => <Poll key={poll.id} data={poll} />)}
+      {polls.map(poll => <Poll key={poll.id} data={poll} user={props.user}/>)}
     </div>
   )
 }
 
 
 function Poll (props) {
-  const [data, setData] = useState(props.data)
-
-  // refresh poll callback
-  console.log(props.data)
-
-  if (!data) {
-    return null;
-  }
+  const data = props.data;
 
   return (
     <div className={styles.poll}>
@@ -48,7 +43,7 @@ function Poll (props) {
       <div className={styles.topic}>
         <span>{data.topic}</span>
       </div>
-      <Options url={data.options_url}/>
+      <Options url={data.options_url} user={props.user}/>
     </div>
   )
 }
@@ -81,6 +76,7 @@ function Options (props) {
         key={option.index} 
         data={option}
         reqPoll={reqPoll}
+        user={props.user}
       />)}
     </div>
   )
@@ -94,18 +90,20 @@ function Option (props) {
   // Depending on votes request status return 
   // either ability to vote or votes
   useEffect(() => {
-    getData(data.votes_url)
-    .then(data => {
-      if (data.status === 403) {
-        // let user vote
-        setVotes(true)
-      } else if (data.status === 200) {
-        // display votes
-        setVotes(data.body.votes)
-        setVoted(data.body.voted)
-      }
-    })
-  }, [data.votes_url])
+    if (props.user) {
+      getData(data.votes_url)
+      .then(data => {
+        if (data.status === 403) {
+          // let user vote
+          setVotes(true)
+        } else if (data.status === 200) {
+          // display votes
+          setVotes(data.body.votes)
+          setVoted(data.body.voted)
+        }
+      })
+    }
+  }, [props.user, data.votes_url])
 
 
   // if user anonymous
@@ -118,16 +116,16 @@ function Option (props) {
   }
   // if user hasnt voted yet
   if (votes === true) {
-    return <OptionVote data={data} reqPoll={props.reqPoll}/>
+    return <AllowVote data={data} reqPoll={props.reqPoll}/>
   }
   // show votes
-  return <OptionVotes votes={votes} voted={voted}/>
+  return <ShowVotes votes={votes} voted={voted}/>
 }
 
 
-function OptionVotes (props) {
-  const votes = props.votes;
-  console.log(votes)
+// displays users avatars that voted
+function ShowVotes (props) {
+  
   return (
     <div className={`${styles.option} ${props.voted ? styles.voted : null}`}>
       <span>showing votes</span>
@@ -136,7 +134,7 @@ function OptionVotes (props) {
 }
 
 
-function OptionVote (props) {
+function AllowVote (props) {
   const data = props.data;
   const form = {'anonymous': false}
 

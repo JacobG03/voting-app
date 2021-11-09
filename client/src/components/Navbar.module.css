@@ -1,0 +1,28 @@
+.navbar {
+  position: relative;
+  width: calc(100% - 4rem);
+  height: 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  background-color: var(--color-dark);
+  z-index: 5;
+}
+
+.navbar > span {
+  font-size: 1.25rem;
+}
+
+.signin {
+  width: fit-content;
+  height: fit-content;
+  font-size: 1rem;
+  background-color: var(--color);
+  border: none;
+  padding: 0.6rem;
+  border-radius: var(--border-radius);
+  color: var(--color-text);
+  box-shadow: var(--height);
+}

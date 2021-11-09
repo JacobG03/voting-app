@@ -3,6 +3,12 @@
   --color-dark: #161F6D;
   --color-text: #fff;
   --border-radius: 6px;
+  --depth: inset 0 -2px 0 rgb(255, 255, 255, 0.1);
+  --height: inset 0 -2px 0 rgb(0, 0, 0, 0.2);
+  --depth-shadow: inset 0 2px 2px hsla(0, 0%, 0%, 0.1);
+  --elevation: 0.8px 1.6px 1.6px hsl(0deg 0% 0% / 48);
+  --elevation2: 3.2px 6.4px 14px hsl(0deg 0% 0% / 20);
+  --elevation3: 8px 16px 24px hsl(0deg 0% 0% / 25);
 }
 
 * {

@@ -65,6 +65,7 @@ class Option(db.Model):
   body = db.Column(db.String(128), nullable=False)
   votes = db.relationship('Vote', backref=db.backref('option', lazy=True))
 
+
   def did_vote(self, given_id):
     """
     did_vote(user_id)

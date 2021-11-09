@@ -18,6 +18,7 @@ export async function postData(endpoint, data={}) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
-  });
-  return response.json();
+  })
+  .then(r => r.json().then(data => ({status: r.status, body:data})))
+  return response;
 }
