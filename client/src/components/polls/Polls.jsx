@@ -118,16 +118,42 @@ function Option (props) {
     return <AllowVote data={data} reqPoll={props.reqPoll}/>
   }
   // show votes
-  return <ShowVotes votes={votes} voted={voted}/>
+  return <ShowVotes data={data} votes={votes} voted={voted}/>
 }
 
 
 // displays users avatars that voted
 function ShowVotes (props) {
-  
+  const [display, setDisplay] = useState(false)
+  const data = props.data;
+
+  if (!display) {
+    return (
+      <div 
+        className={`${styles.option} ${props.voted ? styles.voted : null}`}
+        onClick={() => setDisplay(!display)}
+      >
+        <div className={styles.option_body}>
+          <span>{data.body}</span>
+        </div>
+        <div className={styles.option_votes}>
+          {props.votes.length}
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className={`${styles.option} ${props.voted ? styles.voted : null}`}>
-      <span>showing votes</span>
+    <div 
+      className={`${styles.option} ${props.voted ? styles.voted : null}`}
+      onClick={() => setDisplay(!display)}
+    >
+      <div className={styles.option_avatars}>
+        {props.votes.map(vote => <img src={vote.avatar} alt='user'/>)}
+      </div>
+      <div className={styles.option_votes}>
+        {props.votes.length}
+      </div>
     </div>
   )
 }
