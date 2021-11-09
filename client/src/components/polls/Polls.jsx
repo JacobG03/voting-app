@@ -11,15 +11,19 @@ function Polls (props) {
   const [polls, setPolls] = useState(null)
 
   useEffect(() => {
+    if (!props.user) {
+      setPolls(null)
+    }
+  }, [props.user])
+
+  useEffect(() => {
     getData('/polls')
     .then(data => {
       if (data.status === 200) {
-        setPolls(null)
         setPolls(data.body)
       }
     })
-  }, [props.user])
-
+  }, [polls])
 
   if (!polls) {
     return null;
@@ -140,7 +144,7 @@ function AllowVote (props) {
 
   const vote = () => {
     postData(data.votes_url, form)
-    .then(data => console.log(data))
+    .then(obj => console.log(obj.body.msg))
     // refresh poll
     props.reqPoll()
   }
