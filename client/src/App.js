@@ -17,6 +17,8 @@ function App() {
   // for creating poll form
   const [poll, displayPoll] = useState(false)
 
+  const [rpolls, rerenderPolls] = useState(false)
+
   // Get user object if user is logged in else null
   useEffect(() => {
     getData('/user')
@@ -39,8 +41,8 @@ function App() {
       />
       <div className={styles.content}>
         {form ? <Form setUser={setUser} displayForm={displayForm}/>: null}
-        {user && poll ? <CreatePoll user={user} displayPoll={displayPoll} />: null}
-        <Polls user={user} poll={poll}/>
+        {user && poll ? <CreatePoll user={user} rerenderPolls={rerenderPolls} displayPoll={displayPoll} />: null}
+        <Polls user={user} rpolls={rpolls}/>
       </div>
     </div>
   );

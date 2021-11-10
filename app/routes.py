@@ -4,6 +4,7 @@ from flask import jsonify, request
 from app.schemas import CreateRegisterSchema, CreateLoginSchema, CreatePollSchema, CreateOptionSchema, CreateVoteSchema
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies, current_user
+from random import randint
 
 
 registerSchema = CreateRegisterSchema()

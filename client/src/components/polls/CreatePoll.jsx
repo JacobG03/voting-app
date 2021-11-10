@@ -1,7 +1,7 @@
 import styles from './CreatePoll.module.css'
 import { useState } from 'react'
 import { useForm } from "react-hook-form";
-import { getData, postData } from '../../services/api_calls';
+import { postData } from '../../services/api_calls';
 
 
 function CreatePoll (props) {
@@ -13,7 +13,7 @@ function CreatePoll (props) {
         <img src={props.user.avatar} alt='User' />
         <span>{props.user.username}</span>
       </div>
-      <CreatePollForm displayPoll={props.displayPoll} />
+      <CreatePollForm rerenderPolls={props.rerenderPolls} displayPoll={props.displayPoll} />
     </div>
   )
 }
@@ -35,6 +35,7 @@ function CreatePollForm (props) {
     postData('/polls', new_data)
     .then(data => {
       if (data.status === 200) {
+        props.rerenderPolls(prev => !prev)
         props.displayPoll(false)
       } else {
         console.log(data.body)

@@ -38,8 +38,8 @@ function LoginForm (props) {
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <span>Email:</span>
-        <input placeholder='Email' {...register("email", {required: true})} />
+        <span>Login:</span>
+        <input placeholder='Login' {...register("email", {required: true})} />
         {errors.email && <span>This field is required</span>}
         <span>Password:</span>
         <input placeholder='Password' type='password' {...register("password", { required: true })} />
@@ -77,8 +77,8 @@ function RegisterForm (props) {
       <div>
         <span>Username:</span>
         <input placeholder='Username' {...register("username", {required: true, minLength: 3, maxLength: 64})} />
-        <span>Email:</span>
-        <input placeholder='Email' {...register("email", {required: true, minLength: 1, maxLength: 128})} />
+        <span>Login:</span>
+        <input placeholder='Email or just a string' {...register("email", {required: true, minLength: 1, maxLength: 128})} />
         <span>Password:</span>
         <input placeholder='Password' type='password' {...register("password", { required: true , minLength: 3, maxLength: 256})} />
         {errors.password && <span>This field is required</span>}
