@@ -18,12 +18,10 @@
 .signin {
   width: fit-content;
   height: fit-content;
-  font-size: 1rem;
+  font-size: 0.8rem;
   background-color: var(--color);
   border: none;
-  padding: 0.6rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 0.5rem;
   border-radius: var(--border-radius);
   color: var(--color-text);
   box-shadow: var(--height);

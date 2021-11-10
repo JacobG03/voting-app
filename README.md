@@ -46,8 +46,8 @@ https://www.heroku.com/postgres
 ## [*] Login
 ## [] Animations
 ## [] Responsiveness
-## [] Add ability to set up custom profile image while registering
-## [] Fix 'poll' components not rerendering after logout 
+## [*] Add ability to set up custom profile image while registering
+## [*] Fix 'poll' components not rerendering after logout 
 
 
 

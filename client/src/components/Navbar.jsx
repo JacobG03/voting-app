@@ -31,6 +31,12 @@ function Navbar(props) {
   return (
     <nav className={styles.navbar}>
       <span>{'<Voting App>'}</span>
+      {props.user ? <button 
+        className={styles.signin}
+        onClick={() => props.displayPoll(prev => !prev)}
+      >
+        Create Poll
+      </button>: null}
       <button 
         className={styles.signin}
         onClick={() => signout()}
