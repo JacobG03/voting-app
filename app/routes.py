@@ -161,6 +161,11 @@ def create_poll():
     return jsonify({
       'errors': errors
     }), 422
+
+  if len(data['options']) < 2:
+    return jsonify({
+      'msg': 'Minimum 2 options'
+    }), 422
   
   # create poll
   poll = Poll(user_id=current_user.id, topic=data['topic'])
