@@ -42,4 +42,5 @@
   border-radius: var(--border-radius);
   color: var(--color-text);
   box-shadow: var(--height);
+  cursor: pointer;
 }
