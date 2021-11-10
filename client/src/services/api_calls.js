@@ -1,5 +1,7 @@
+const api = 'https://voting-app2.herokuapp.com/api'
+
 export async function getData(endpoint) {
-  const response = await fetch(endpoint, {
+  const response = await fetch(api + endpoint, {
     method: 'GET',
     mode: 'cors',
     credentials: 'same-origin',
@@ -10,7 +12,7 @@ export async function getData(endpoint) {
 
 
 export async function postData(endpoint, data={}) {
-  const response = await fetch(endpoint, {
+  const response = await fetch(api + endpoint, {
     method: 'POST',
     mode: 'cors',
     credentials: 'same-origin',
