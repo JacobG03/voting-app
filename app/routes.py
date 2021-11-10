@@ -1,6 +1,6 @@
 from app import app, db
 from app.models import User, Poll, Option, Vote
-from flask import jsonify, request
+from flask import jsonify, request, send_from_directory
 from app.schemas import CreateRegisterSchema, CreateLoginSchema, CreatePollSchema, CreateOptionSchema, CreateVoteSchema
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, set_access_cookies, jwt_required, unset_jwt_cookies, current_user
@@ -12,6 +12,17 @@ loginSchema = CreateLoginSchema()
 pollSchema = CreatePollSchema()
 optionSchema = CreateOptionSchema()
 voteSchema = CreateVoteSchema()
+
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.errorhandler(404)   
+def not_found(e):   
+  return send_from_directory(app.static_folder, 'index.html')
+
 
 
 @app.get('/api')
