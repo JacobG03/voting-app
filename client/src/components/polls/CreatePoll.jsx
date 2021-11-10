@@ -19,7 +19,7 @@ function CreatePoll (props) {
 }
 
 function CreatePollForm (props) {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, unregister } = useForm();
   const onSubmit = data => {
     var new_data = {
       'topic': data.topic,
@@ -49,7 +49,7 @@ function CreatePollForm (props) {
         <span>Topic:</span>
         <input placeholder='Topic' {...register("topic", {required: true})} />
       </div>
-      <Options register={register}/>
+      <Options unregister={unregister} register={register}/>
       
       <div className={styles.finish}>
         <span onClick={() => props.displayPoll(prev => !prev)}>Cancel</span>
@@ -70,7 +70,7 @@ function Options(props) {
 
   return (
     <div className={styles.options}>
-      {options.map(option => <Option options={options} setOptions={setOptions} option={option} key={option.id} register={props.register}/>)}
+      {options.map(option => <Option unregister={props.unregister} options={options} setOptions={setOptions} option={option} key={option.id} register={props.register}/>)}
       <span onClick={() => addOption()}>Add Option</span>
     </div>
   )
@@ -79,6 +79,7 @@ function Options(props) {
 function Option(props) {
   const removeOption = () => {
     var filtered = props.options.filter(function(option) { return option !== props.option; }); 
+    props.unregister(`option-${props.option.id}`)
     props.setOptions(filtered)
   }
 
