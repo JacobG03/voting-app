@@ -31,6 +31,7 @@
   font-weight: 300;
   font-style: italic;
   color: rgba(255, 255, 255, 0.698);
+  cursor: pointer;
 }
 
 .submit {
