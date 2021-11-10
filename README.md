@@ -29,7 +29,7 @@ https://www.heroku.com/postgres
 
 
 
-# Total time spent on this project - *11 hours*
+# Total time spent on this project - *14 hours*
 
 # API
 ## [#] Allow voters decide whether their vote will be public or hidden

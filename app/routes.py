@@ -59,6 +59,7 @@ def register():
   user = User(
     username=data['username'],
     email=data['email'],
+    avatar=data['avatar'],
     password=hashed_password
   )
   db.session.add(user)

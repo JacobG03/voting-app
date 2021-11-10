@@ -39,10 +39,10 @@ function LoginForm (props) {
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <div>
         <span>Email:</span>
-        <input {...register("email", {required: true})} />
+        <input placeholder='Email' {...register("email", {required: true})} />
         {errors.email && <span>This field is required</span>}
         <span>Password:</span>
-        <input type='password' {...register("password", { required: true })} />
+        <input placeholder='Password' type='password' {...register("password", { required: true })} />
         {errors.password && <span>This field is required</span>}
       </div>
       
@@ -76,14 +76,16 @@ function RegisterForm (props) {
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <div>
         <span>Username:</span>
-        <input {...register("username", {required: true, minLength: 3, maxLength: 64})} />
+        <input placeholder='Username' {...register("username", {required: true, minLength: 3, maxLength: 64})} />
         <span>Email:</span>
-        <input {...register("email", {required: true, minLength: 1, maxLength: 128})} />
+        <input placeholder='Email' {...register("email", {required: true, minLength: 1, maxLength: 128})} />
         <span>Password:</span>
-        <input type='password' {...register("password", { required: true , minLength: 3, maxLength: 256})} />
+        <input placeholder='Password' type='password' {...register("password", { required: true , minLength: 3, maxLength: 256})} />
         {errors.password && <span>This field is required</span>}
         <span>Repeat Password:</span>
-        <input type='password' {...register("password2", { required: true , minLength: 3, maxLength: 256})} />
+        <input placeholder='Repeat Password' type='password' {...register("password2", { required: true , minLength: 3, maxLength: 256})} />
+        <span>Avatar:</span>
+        <input placeholder='URL: [PNG, JPG, GIF]' {...register("avatar", { required: true })} />
       </div>
       <input type="submit" className={styles.submit} value='Sign Up'/>
       <span className={styles.switch} onClick={() => props.changeForm(last => !last)}>Login</span>

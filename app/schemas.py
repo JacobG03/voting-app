@@ -10,6 +10,7 @@ class CreateRegisterSchema(Schema):
   email = fields.Str(required=True,  validate=Length(1, 128))
   password = fields.Str(required=True, validate=Length(4, 128))
   password2 = fields.Str(required=True, validate=[Length(4, 128)])
+  avatar = fields.Str(required=False)
 
 
   @validates('username')
@@ -27,6 +28,12 @@ class CreateRegisterSchema(Schema):
     # checks if email is used by another user
     if User.query.filter(func.lower(User.email) == func.lower(email)).first():
       raise ValidationError('Email is taken. Try a different one')
+
+
+  @validates('avatar')
+  def validateAvatar(self, avatar):
+    if avatar[-4:].lower() not in ['.jpg', '.png', '.gif']:
+      raise ValidationError('Format allowed: PNG, JPG, GIF')
 
 
 class CreateLoginSchema(Schema):
