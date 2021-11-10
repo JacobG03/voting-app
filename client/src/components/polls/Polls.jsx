@@ -10,6 +10,15 @@ import { getData, postData } from '../../services/api_calls'
 function Polls (props) {
   const [polls, setPolls] = useState(null)
   
+  if (polls === false){
+    getData('/polls')
+    .then(data => {
+      if (data.status === 200) {
+        setPolls(data.body)
+      }
+    })
+  }
+  
   useEffect(() => {
     getData('/polls')
     .then(data => {
@@ -19,14 +28,6 @@ function Polls (props) {
     })
   }, [props.user, props.poll])
 
-  if (polls === false){
-    getData('/polls')
-    .then(data => {
-      if (data.status === 200) {
-        setPolls(data.body)
-      }
-    })
-  }
 
   if (!polls) {
     return null;

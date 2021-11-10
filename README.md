@@ -41,7 +41,7 @@ https://www.heroku.com/postgres
 ## [*] When already voted see total votes on right side of option (always)
 ### [*] Allow user which already voted to switch between displaying "option body" or "option votings" (a bunch of small avatars) on single tap
 ## [] Poll Deletion button if state user.username === poll.username
-## [] Poll Creation (always on top of screen)
+## [*] Poll Creation (always on top of screen)
 ## [*] Register
 ## [*] Login
 ## [] Animations
