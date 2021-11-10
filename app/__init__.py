@@ -7,7 +7,7 @@ from config import Config
 import os
 
 
-app = Flask(__name__, static_folder=os.path.abspath('./frontend/build'), static_url_path='')
+app = Flask(__name__, static_folder=os.path.abspath('./client/build'), static_url_path='')
 app.config.from_object(Config)
 jwt = JWTManager(app)
 db = SQLAlchemy(app)
