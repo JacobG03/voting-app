@@ -82,3 +82,24 @@
   width: 95%;
   height: 1.25rem;
 }
+
+.addBtn {
+  width: fit-content;
+  background-color: var(--color);
+  border: none;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  color: var(--color-text);
+  box-shadow: var(--height);
+}
+
+.delBtn {
+  width: fit-content;
+  background-color: var(--color);
+  border: none;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  border-radius: var(--border-radius);
+  color: var(--color-text);
+  box-shadow: var(--height);
+}

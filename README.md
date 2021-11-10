@@ -40,12 +40,11 @@ https://www.heroku.com/postgres
 # Client 
 ## [*] When already voted see total votes on right side of option (always)
 ### [*] Allow user which already voted to switch between displaying "option body" or "option votings" (a bunch of small avatars) on single tap
-## [] Poll Deletion button if state user.username === poll.username
 ## [*] Poll Creation (always on top of screen)
 ## [*] Register
 ## [*] Login
 ## [] Animations
-## [] Responsiveness
+## [*] Responsiveness - at least some
 ## [*] Add ability to set up custom profile image while registering
 ## [*] Fix 'poll' components not rerendering after logout 
 

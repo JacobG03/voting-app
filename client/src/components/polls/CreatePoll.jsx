@@ -72,7 +72,7 @@ function Options(props) {
   return (
     <div className={styles.options}>
       {options.map(option => <Option unregister={props.unregister} options={options} setOptions={setOptions} option={option} key={option.id} register={props.register}/>)}
-      <span onClick={() => addOption()}>Add Option</span>
+      <button className={styles.addBtn} onClick={() => addOption()}>Add Option</button>
     </div>
   )
 }
@@ -87,7 +87,7 @@ function Option(props) {
   return (
     <div className={styles.option}>
       <input placeholder={`Option ${props.option.id}`} {...props.register(`option-${props.option.id}`, { required: true })} />
-      <span onClick={() => removeOption()}>-</span>
+      <button className={styles.delBtn} onClick={() => removeOption()}>-</button>
     </div>
   )
 }
