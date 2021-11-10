@@ -157,7 +157,7 @@ function ShowVotes (props) {
       onClick={() => setDisplay(!display)}
     >
       <div className={styles.option_avatars}>
-        {props.votes.map(vote => <img src={vote.avatar} key={vote.username} alt='user'/>)}
+        {props.votes.length > 0 ? props.votes.map(vote => <img src={vote.avatar} key={vote.username} alt='user'/>): <span>No votes</span>}
       </div>
       <div className={styles.option_votes}>
         {props.votes.length}
