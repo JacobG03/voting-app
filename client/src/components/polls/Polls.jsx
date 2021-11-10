@@ -34,6 +34,8 @@ function Polls (props) {
 
 function Poll (props) {
   const data = props.data;
+  const [votesNum, setVotesNum] = useState(data.votes)
+
   return (
     <div className={styles.poll}>
       <PollAuthor url={data.author_url} />
@@ -41,8 +43,8 @@ function Poll (props) {
       <div className={styles.topic}>
         <span>{data.topic}</span>
       </div>
-      <Options url={data.options_url} user={props.user}/>
-      <span className={styles.poll_votes}>{data.votes}</span>
+      <Options url={data.options_url} user={props.user} setVotesNum={setVotesNum}/>
+      <span className={styles.poll_votes}>{votesNum}</span>
     </div>
   )
 }
@@ -61,8 +63,9 @@ function Options (props) {
     .then(data => {
       setOptions(null) // to force rerender components
       setOptions(data.body)
+      props.setVotesNum(prev => prev + 1)
     })
-  }, [props.url])
+  }, [props])
 
   if (!options) {
     return null;
