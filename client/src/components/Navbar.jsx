@@ -17,32 +17,38 @@ function Navbar(props) {
   if (!props.user) {
     return (
       <nav className={styles.navbar}>
-        <span>{'<Voting App>'}</span>
-        <button 
-          className={styles.signin}
-          onClick={() => props.displayForm(form => !form)}
-        >
-          Sign in
-        </button>
+        <div className={styles.content}>
+          <span>{'<Voting App>'}</span>
+          <button 
+            className={styles.signin}
+            onClick={() => props.displayForm(form => !form)}
+          >
+            Sign in
+          </button>
+        </div>
       </nav>
     )
   }
 
   return (
     <nav className={styles.navbar}>
-      <span>{'<Voting App>'}</span>
-      {props.user ? <button 
-        className={styles.signin}
-        onClick={() => props.displayPoll(prev => !prev)}
-      >
-        Create Poll
-      </button>: null}
-      <button 
-        className={styles.signin}
-        onClick={() => signout()}
-      >
-        Sign out
-      </button>
+      <div className={styles.content}>
+        <span>{'<Voting App>'}</span>
+        <div className={styles.action}>
+          {props.user ? <button 
+            className={styles.signin}
+            onClick={() => props.displayPoll(prev => !prev)}
+          >
+            Create Poll
+          </button>: null}
+          <button 
+            className={styles.signin}
+            onClick={() => signout()}
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
     </nav>
   )
 }

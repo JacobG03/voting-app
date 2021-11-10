@@ -12,3 +12,9 @@
   padding: 2rem;
   gap: 2rem;
 }
+
+@media only screen and (min-width : 700px) {
+  .content {
+    width: calc(700px - 4rem);
+  }
+}
