@@ -21,8 +21,27 @@ function CreatePoll (props) {
 function CreatePollForm (props) {
   const { register, handleSubmit } = useForm();
   const onSubmit = data => {
-    console.log(data)
-  };
+    var new_data = {
+      'topic': data.topic,
+      'options': []
+    }
+
+    for (const key in data) {
+      if (key !== 'topic') {
+        new_data['options'].push(data[key])
+      }
+    }
+
+    postData('/polls', new_data)
+    .then(data => {
+      if (data.status === 200) {
+        props.displayPoll(false)
+      } else {
+        console.log(data.body)
+      }
+    })
+  }
+
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -44,7 +63,6 @@ function Options(props) {
   const [options, setOptions] = useState([])
 
   const addOption = () => {
-    console.log('here')
     setOptions(prev => [...prev, {
       'id': options.length
     }])

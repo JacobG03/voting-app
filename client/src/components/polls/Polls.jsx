@@ -17,7 +17,7 @@ function Polls (props) {
         setPolls(false)
       }
     })
-  }, [props.user])
+  }, [props.user, props.poll])
 
   if (polls === false){
     getData('/polls')

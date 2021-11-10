@@ -40,7 +40,7 @@ function App() {
       <div className={styles.content}>
         {form ? <Form setUser={setUser} displayForm={displayForm}/>: null}
         {user && poll ? <CreatePoll user={user} displayPoll={displayPoll} />: null}
-        <Polls user={user}/>
+        <Polls user={user} poll={poll}/>
       </div>
     </div>
   );
